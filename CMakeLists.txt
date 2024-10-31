@@ -9,7 +9,7 @@ include_directories(
     "include"
 )
 
-set(CXX_FLAGS "-Wall" "-Wfatal-errors" "-Wextra" "-g" "-O3" "-std=c++14")
+set(CXX_FLAGS "/W4 /WX /EHsc /O2 /std:c++14")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
 set(EXEC_NAME "test_server")
@@ -54,8 +54,20 @@ if (NOT cppzmq_FOUND AND NOT TARGET cppzmq)
 
   add_library(cppzmq INTERFACE)
   target_include_directories(cppzmq INTERFACE ext/cppzmq)
-  target_link_libraries(cppzmq INTERFACE zmq)
 endif()
+
+# --------------------------------------------------------------------------------------------
+# Set Ninja as the generator
+if (CMAKE_GENERATOR STREQUAL "Ninja")
+    set(CMAKE_MAKE_PROGRAM "ninja")
+else()
+    message(FATAL_ERROR "This project requires the Ninja generator.")
+endif()
+
+# --------------------------------------------------------------------------------------------
+# Add executable
+add_executable(${EXEC_NAME} ${SOURCE_NAMES})
+target_link_libraries(${EXEC_NAME} zmq cppzmq)
 
 # --------------------------------------------------------------------------------------------
 # Boost

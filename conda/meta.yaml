@@ -7,7 +7,7 @@ package:
 source:
   # path: ../
   git_url: https://github.com/cicwi/TomoPackets
-  git_tag: master
+  git_tag: main
 
 build:
   number: 0
