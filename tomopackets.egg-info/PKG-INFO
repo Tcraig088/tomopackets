@@ -1,0 +1,8 @@
+Metadata-Version: 2.1
+Name: tomopackets
+Version: 1.0.0
+Summary: ZeroMQ based streaming for RT tomography
+Home-page: https://github.com/cicwi/tomopackets
+Author: Jan-Willem Buurlage
+Author-email: janwillembuurlage@gmail.com
+License-File: LICENSE.md

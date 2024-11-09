@@ -1,0 +1,9 @@
+LICENSE.md
+README.md
+setup.py
+tomop/__init__.py
+tomopackets.egg-info/PKG-INFO
+tomopackets.egg-info/SOURCES.txt
+tomopackets.egg-info/dependency_links.txt
+tomopackets.egg-info/not-zip-safe
+tomopackets.egg-info/top_level.txt

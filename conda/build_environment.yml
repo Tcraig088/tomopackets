@@ -4,8 +4,7 @@ channels:
 dependencies:
 - cmake
 - make
-- gxx_linux-64
 - boost-cpp
 - pybind11
 - zeromq
-- python=3.7
+
