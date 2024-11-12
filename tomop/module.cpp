@@ -48,7 +48,11 @@ PYBIND11_MODULE(py_tomop, m) {
         hana::make_tuple("group_request_slices_packet"s,
                          hana::type_c<GroupRequestSlicesPacket>),
         hana::make_tuple("make_scene_packet"s, hana::type_c<MakeScenePacket>),
-        hana::make_tuple("kill_scene_packet"s, hana::type_c<KillScenePacket>));
+        hana::make_tuple("kill_scene_packet"s, hana::type_c<KillScenePacket>),
+        hana::make_tuple("microscope_specifications_packet"s,
+                         hana::type_c<MicroscopeSpecificationsPacket>),
+        hana::make_tuple("imaging_specifications_packet"s,
+                            hana::type_c<ImagingSpecificationsPacket>));
 
     hana::for_each(packets, [&](auto x) {
         // 1) get C++ type
