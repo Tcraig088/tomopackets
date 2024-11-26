@@ -14,13 +14,18 @@ class CMakeExtension(Extension):
 
 class CMakeBuild(build_ext):
     def run(self):
+        try:
+            import cmake
+        except ImportError:
+            raise RuntimeError("CMake must be installed to build the following extensions: " +
+                               ", ".join(e.name for e in self.extensions))
         for ext in self.extensions:
             self.build_extension(ext)
 
     def build_extension(self, ext):
         extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
-        print("extpath",extdir)
-        lib_path = os.path.join(extdir, "build",'py_tomop.lib')
+        print("extpath", extdir)
+        lib_path = os.path.join(extdir, "build", 'py_tomop.lib')
 
         if os.path.exists(lib_path):
             print(f"Found existing library: {lib_path}")
@@ -47,8 +52,20 @@ class CMakeBuild(build_ext):
                                                               self.distribution.get_version())
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
-        #subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
-        #subprocess.check_call(['cmake', '--build', '.'] + build_args, cwd=self.build_temp)
+        subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
+        subprocess.check_call(['cmake', '--build', '.'] + build_args, cwd=self.build_temp)
+
+        # Move the built library to the correct location
+        if platform.system() == "Windows":
+            built_lib = os.path.join(self.build_temp, cfg, 'py_tomop.pyd')
+        else:
+            built_lib = os.path.join(self.build_temp, 'py_tomop.so')
+
+        if os.path.exists(built_lib):
+            dest_lib = os.path.join(extdir, os.path.basename(built_lib))
+            os.rename(built_lib, dest_lib)
+        else:
+            raise RuntimeError(f"Built library {built_lib} not found.")
 
 setup(
     name='tomopackets',
