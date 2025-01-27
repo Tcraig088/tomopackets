@@ -6,6 +6,16 @@
 
 namespace tomop {
 
+
+struct MicroscopeConnectionPacket
+    : public PacketBase<MicroscopeConnectionPacket> {
+    static const auto desc = packet_desc::microscope_connection;
+    MicroscopeConnectionPacket() = default;
+    MicroscopeConnectionPacket(int32_t a)
+        : scene_id(a) {}
+    BOOST_HANA_DEFINE_STRUCT(MicroscopeConnectionPacket, (int32_t, scene_id))
+};
+
 struct MicroscopeSpecificationsPacket
     : public PacketBase<MicroscopeSpecificationsPacket> {
     static const auto desc = packet_desc::microscope_scpecifications;

@@ -190,26 +190,33 @@ class server {
             }
 
             std::cout << "Hosting projection server at localhost:5557...\n";
-            zmq::socket_t socket(context_, ZMQ_REP);
-            socket.bind("tcp://*:5557");
+            zmq::socket_t req_socket(context_, ZMQ_REQ);
+            zmq::socket_t pull_socket(context_, ZMQ_PULL);
+            req_socket.connect("tcp://localhost:5555");
+            pull_socket.bind("tcp://*:5556");
+
+            // Send initial connection request
+            zmq::message_t request(5);
+            memcpy(request.data(), "READY", 5);
+            req_socket.send(request);
+
+            zmq::message_t reply;
+            req_socket.recv(&reply);
+            std::string reply_str(static_cast<char*>(reply.data()), reply.size());
+            if (reply_str != "CONFIRMED") {
+                throw server_error("Failed to establish connection with publisher");
+            }
 
             while (true) {
-                zmq::message_t request;
+                zmq::message_t message;
+                pull_socket.recv(&message);
 
-                //  Wait for next request from client
-                socket.recv(&request);
-
-                zmq::message_t reply(sizeof(int));
-                int success = 1;
-                memcpy(reply.data(), &success, sizeof(int));
-                socket.send(reply);
-
-                auto desc = ((packet_desc*)request.data())[0];
+                auto desc = ((packet_desc*)message.data())[0];
 
                 switch (desc) {
                 case packet_desc::projection_data: {
                     auto packet = std::make_unique<ProjectionDataPacket>();
-                    packet->deserialize(request);
+                    packet->deserialize(message);
                     projection_data_callback_(packet->detector_pixels,
                                               packet->data,
                                               packet->projection_id);

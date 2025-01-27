@@ -31,8 +31,9 @@ enum class packet_desc : int {
     set_part = 0x401,
 
     // IMAGING
-    microscope_scpecifications = 0x501,
-    imaging_scpecifications = 0x502,
+    microscope_connection = 0x501,
+    microscope_scpecifications = 0x502,
+    imaging_scpecifications = 0x503,
 };
 
 } // namespace tomop
