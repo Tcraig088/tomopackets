@@ -10,6 +10,7 @@ namespace tomop {
 
 class publisher {
   public:
+
     publisher(std::string hostname = "localhost", int32_t port = 5555,
               int32_t push_port = 5556)
         : context_(1), rep_socket_(context_, ZMQ_REP), push_socket_(context_, ZMQ_PUSH) {
